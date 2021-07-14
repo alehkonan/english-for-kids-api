@@ -1,5 +1,4 @@
 import express from 'express';
-import { SERVER_PORT } from './config';
 import dataRouter from './routes/data.routes';
 import authRouter from './routes/auth.routes';
 import { pool } from './database';
@@ -20,11 +19,10 @@ app.use('/api/auth', authRouter);
 const start = async () => {
   try {
     await pool.connect();
-    app.listen(SERVER_PORT, () => {
-      console.log(`App listenning at http://localhost:${SERVER_PORT}`);
+    app.listen(process.env.PORT, () => {
+      console.log('App listenning');
     });
   } catch (e) {
-    console.log(`DB error: ${e.message}`);
     process.exit(1);
   }
 };
