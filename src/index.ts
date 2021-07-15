@@ -1,9 +1,16 @@
 import express from 'express';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
 import dataRouter from './routes/data.routes';
 import authRouter from './routes/auth.routes';
 import { pool } from './database';
 
 const app = express();
+const PORT = process.env.PORT || 5000;
+
+const swaggerDocument = yaml.load('./swagger.yaml');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -19,10 +26,11 @@ app.use('/api/auth', authRouter);
 const start = async () => {
   try {
     await pool.connect();
-    app.listen(process.env.PORT, () => {
-      console.log('App listenning');
+    app.listen(PORT, () => {
+      console.log(`App listenning at http://localhost:${PORT}`);
     });
   } catch (e) {
+    console.log(`DB error: ${e.message}`);
     process.exit(1);
   }
 };

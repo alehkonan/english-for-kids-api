@@ -1,0 +1,248 @@
+swagger: "2.0"
+info:
+  title: Sample API
+  description: API for app English for kids
+  version: 1.0.0
+host: localhost:5000
+basePath: /api
+schemes:
+  - http
+paths:
+  /auth/login:
+    post:
+      summary: User authorization
+      security: 
+        - BasicAuth: []
+      parameters:
+        - name: auth data
+          in: body
+          description: An object with email and password
+          schema:
+            type: object
+            properties:
+              email: 
+                type: string
+              password: 
+                type: string
+      responses:
+        201:
+          description: Returns an object with token
+          schema: 
+            type: object
+            properties: 
+              token: 
+                type: string
+                example: sdfvnjjkf3434343kdok3j
+        400: 
+          description: returns an object with error message
+          schema: 
+            type: object
+            properties: 
+              message: 
+                type: string
+                example: incorrect email or password
+        500: 
+          description: returns an object with error message
+          schema: 
+            type: object
+            properties: 
+              message: 
+                type: string
+  /data/categories: 
+    get:
+      summary: returns all categories from database
+      responses:
+        201: 
+          description: returns an array with category objects
+          schema: 
+            type: array
+        500: 
+          $ref: '#/responses/ServerError'
+    put:
+      summary: change category name in database
+      security: 
+        - BasicAuth: []
+      parameters:
+        - name: category names
+          in: body
+          description: An object with old and new categories
+          schema:
+            type: object
+            properties:
+              oldCategory: 
+                type: string
+              newCategory: 
+                type: string
+      responses:
+        201:
+          description: returns a string with successful status
+          schema: 
+            type: string
+            example: category has been updated
+        400: 
+          description: returns a string with error message
+          schema: 
+            type: string
+            example: can`t find such category
+        500: 
+          $ref: '#/responses/ServerError'
+    delete:
+      summary: delete category from database
+      security: 
+        - BasicAuth: []
+      parameters:
+        - name: category name
+          in: body
+          description: An object with category name
+          schema:
+            type: object
+            properties:
+              category: 
+                type: string
+      responses:
+        201: 
+          description: returns a string with successful status
+          schema: 
+            type: string
+            example: category has been deleted
+        500:
+          $ref: '#/responses/ServerError'
+    post:
+      summary: add new category to database
+      security: 
+        - BasicAuth: []
+      parameters:
+        - name: category name
+          in: body
+          description: An object with category name
+          schema:
+            type: object
+            properties:
+              category: 
+                type: string
+      responses:
+        201: 
+          description: returns a string with successful status
+          schema: 
+            type: string
+            example: category has been added
+        400: 
+          description: returns a string with error message
+          schema: 
+            type: string
+            example: this category is already exist
+        500: 
+          $ref: '#/responses/ServerError'
+  /data/words: 
+    get:
+      summary: getting of all words
+      responses:
+        200: 
+          description: returns an object with all words united by categories
+          schema: 
+            type: object
+            properties: 
+              category: 
+                type: string
+                example: pets
+              words: 
+                type: array
+        500: 
+          $ref: '#/responses/ServerError'
+    put:
+      summary: update word in database
+      security: 
+        - BasicAuth: []
+      parameters:
+        - name: word
+          in: body
+          description: An object with id, word, translation, image and audio strings
+          schema:
+            type: object
+            properties:
+              id: 
+                type: number
+              en: 
+                type: string
+              ru: 
+                type: string
+              image: 
+                type: string
+              audio: 
+                type: string
+      responses:
+        201: 
+          description: returns a string with successful status
+          schema: 
+            type: string
+            example: words has been updated
+        500: 
+          $ref: '#/responses/ServerError'
+    delete:
+      summary: delete word from database
+      security: 
+        - BasicAuth: []
+      parameters:
+        - name: word id
+          in: body
+          description: An object word id
+          schema:
+            type: object
+            properties:
+              id: 
+                type: number
+      responses:
+        201: 
+          description: returns a string with successful status
+          schema: 
+            type: string
+            example: word has been deleted
+        500: 
+          $ref: '#/responses/ServerError'
+    post:
+      summary: add new word to database
+      security: 
+        - BasicAuth: []
+      parameters:
+        - name: words with category
+          in: body
+          description: An object all word props and with category name
+          schema:
+            type: object
+            properties:
+              en: 
+                type: string
+              ru: 
+                type: string
+              image: 
+                type: string
+              audio: 
+                type: string
+              category: 
+                type: string
+      responses:
+        201: 
+          description: returns a string with successful status
+          schema: 
+            type: string
+            example: word has been added
+        400: 
+          description: returns a string with error message
+          schema: 
+            type: string
+            example: this word is already exist
+        500: 
+          $ref: '#/responses/ServerError'
+
+responses:
+  ServerError: 
+    description: returns server error message
+    schema: 
+      type: string
+
+security:
+  - BasicAuth: []
+
+securityDefinitions:
+  BasicAuth:
+    type: basic

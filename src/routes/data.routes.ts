@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { IWordWithCategory } from '../customTypes/interfaces';
 import { pool } from '../database';
+import { auth } from '../middleware/auth.middleware';
 
 const router = Router();
 const categoriesQuery = 'SELECT * FROM public.categories';
@@ -26,7 +27,7 @@ router.get('/categories', async (req, res) => {
   }
 });
 
-router.put('/categories', async (req, res) => {
+router.put('/categories', auth, async (req, res) => {
   try {
     let { oldCategory, newCategory }: { oldCategory: string, newCategory: string } = req.body;
     [oldCategory, newCategory] = [oldCategory.toLowerCase(), newCategory.toLowerCase()];
@@ -41,7 +42,7 @@ router.put('/categories', async (req, res) => {
   }
 });
 
-router.delete('/categories', async (req, res) => {
+router.delete('/categories', auth, async (req, res) => {
   try {
     const { category }: { category: string } = req.body;
     await pool.query('DELETE FROM public.categories WHERE category = $1', [category]);
@@ -51,7 +52,7 @@ router.delete('/categories', async (req, res) => {
   }
 });
 
-router.post('/categories', async (req, res) => {
+router.post('/categories', auth, async (req, res) => {
   try {
     let { category }: { category: string } = req.body;
     category = category.toLowerCase();
@@ -97,7 +98,7 @@ router.get('/words', async (req, res) => {
   }
 });
 
-router.put('/words', async (req, res) => {
+router.put('/words', auth, async (req, res) => {
   try {
     const word: IWordWithCategory = req.body;
     const {
@@ -110,7 +111,7 @@ router.put('/words', async (req, res) => {
   }
 });
 
-router.delete('/words', async (req, res) => {
+router.delete('/words', auth, async (req, res) => {
   try {
     const { id }: { id: number } = req.body;
     await pool.query('DELETE FROM public.words WHERE id = $1', [id]);
@@ -120,7 +121,7 @@ router.delete('/words', async (req, res) => {
   }
 });
 
-router.post('/words', async (req, res) => {
+router.post('/words', auth, async (req, res) => {
   try {
     const {
       en, ru, image, audio, category,

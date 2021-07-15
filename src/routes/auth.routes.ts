@@ -62,7 +62,7 @@ router.post(
       const token = jwt.sign(
         { userId: user.user_id },
         jwtSecret,
-        { expiresIn: '1h' },
+        { expiresIn: '24h' },
       );
       return res.status(201).json({ token });
     } catch (e) {
