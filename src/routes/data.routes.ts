@@ -6,8 +6,8 @@ import { auth } from '../middleware/auth.middleware';
 const router = Router();
 const categoriesQuery = 'SELECT * FROM public.categories';
 const wordsQuery = `SELECT words.id, en, ru, image, audio, category
-                  FROM public.words 
-                  LEFT JOIN public.categories 
+                  FROM public.words
+                  LEFT JOIN public.categories
                   ON words.category_id = categories.id`;
 
 router.get('/categories', async (req, res) => {
@@ -23,7 +23,7 @@ router.get('/categories', async (req, res) => {
     }));
     res.status(201).json(result);
   } catch (e) {
-    res.status(500).json(e.message);
+    res.status(500).json((e as Error).message);
   }
 });
 
@@ -38,7 +38,7 @@ router.put('/categories', auth, async (req, res) => {
     await pool.query('UPDATE public.categories SET category = $1 WHERE category = $2', [newCategory, oldCategory]);
     return res.status(201).json(`category ${oldCategory} has been renamed to ${newCategory}`);
   } catch (e) {
-    return res.status(500).json(e.message);
+    return res.status(500).json((e as Error).message);
   }
 });
 
@@ -48,7 +48,7 @@ router.delete('/categories', auth, async (req, res) => {
     await pool.query('DELETE FROM public.categories WHERE category = $1', [category]);
     return res.status(201).json(`category ${category} has been deleted`);
   } catch (e) {
-    return res.status(500).json(e.message);
+    return res.status(500).json((e as Error).message);
   }
 });
 
@@ -63,7 +63,7 @@ router.post('/categories', auth, async (req, res) => {
     await pool.query('INSERT INTO public.categories(category) VALUES($1)', [category]);
     return res.status(201).json(`category ${category} added`);
   } catch (e) {
-    return res.status(500).json(e.message);
+    return res.status(500).json((e as Error).message);
   }
 });
 
@@ -94,7 +94,7 @@ router.get('/words', async (req, res) => {
       ));
     res.status(200).send(Object.fromEntries(result));
   } catch (e) {
-    res.status(500).json(e.message);
+    res.status(500).json((e as Error).message);
   }
 });
 
@@ -107,7 +107,7 @@ router.put('/words', auth, async (req, res) => {
     await pool.query('UPDATE public.words SET en = $1, ru = $2, image = $3, audio = $4 WHERE id = $5', [en, ru, image, audio, id]);
     return res.status(201).json(`word ${en} has been changed`);
   } catch (e) {
-    return res.status(500).json(e.message);
+    return res.status(500).json((e as Error).message);
   }
 });
 
@@ -117,7 +117,7 @@ router.delete('/words', auth, async (req, res) => {
     await pool.query('DELETE FROM public.words WHERE id = $1', [id]);
     return res.status(201).json('word has been deleted');
   } catch (e) {
-    return res.status(500).json(e.message);
+    return res.status(500).json((e as Error).message);
   }
 });
 
@@ -143,7 +143,7 @@ router.post('/words', auth, async (req, res) => {
     await pool.query(query, values);
     return res.status(201).json(`word '${en}' added`);
   } catch (e) {
-    return res.status(500).json(e.message);
+    return res.status(500).json((e as Error).message);
   }
 });
 

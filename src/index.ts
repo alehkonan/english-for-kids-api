@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
@@ -30,7 +31,7 @@ const start = async () => {
       console.log(`App listenning at http://localhost:${PORT}`);
     });
   } catch (e) {
-    console.log(`DB error: ${e.message}`);
+    console.log(`DB error: ${(e as Error).message}`);
     process.exit(1);
   }
 };

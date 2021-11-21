@@ -3,7 +3,6 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { check, validationResult } from 'express-validator';
 import { pool } from '../database';
-import { jwtSecret } from '../config';
 
 const router = Router();
 
@@ -29,7 +28,7 @@ router.post(
       await pool.query(query, values);
       return res.send('User created');
     } catch (e) {
-      return res.status(500).json({ message: e.message });
+      return res.status(500).json({ message: (e as Error).message });
     }
   },
 );
@@ -61,12 +60,12 @@ router.post(
       }
       const token = jwt.sign(
         { userId: user.user_id },
-        jwtSecret,
+        process.env.JWT_SECRET || '',
         { expiresIn: '24h' },
       );
       return res.status(201).json({ token });
     } catch (e) {
-      return res.status(500).json({ message: e.message });
+      return res.status(500).json({ message: (e as Error).message });
     }
   },
 );

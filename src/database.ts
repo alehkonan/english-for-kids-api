@@ -1,7 +1,8 @@
 import { Pool } from 'pg';
-import { pgUri } from './config';
+
+const { PG_URI } = process.env;
 
 export const pool = new Pool({
-  connectionString: pgUri,
+  connectionString: PG_URI,
   ssl: { rejectUnauthorized: false },
 });
